@@ -1,6 +1,7 @@
 # CrudBic
 
-https://sonarcloud.io/api/project_badges/measure?project=ru.letnes%3ACrudBic&metric=alert_status
+[![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=ru.letnes%3ACrudBic&metric=alert_status)](https://sonarcloud.io/dashboard?id=ru.letnes%3ACrudBic)
+
 
 БД: Приложение требует наличия поднятой PostgreSQL с параметрами
 `jdbc:postgresql://localhost:5432/bic`
