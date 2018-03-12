@@ -3,7 +3,10 @@ package ru.letnes.rest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import ru.letnes.model.IEntity;
 import ru.letnes.service.iService;
 
@@ -20,7 +23,7 @@ public abstract class CrudRestController<T extends IEntity> extends ErrorHandlin
     }
 
     @RequestMapping(value = "/findById/{id}", produces = {MediaType.APPLICATION_JSON_VALUE}, method = RequestMethod.GET)
-    public ResponseEntity<T> findById(@PathVariable(value="id") Long id) {
+    public ResponseEntity<T> findById(@PathVariable(value = "id") Long id) {
         return new ResponseEntity<>(getService().findById(id), HttpStatus.OK);
     }
 

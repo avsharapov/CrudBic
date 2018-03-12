@@ -12,9 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 abstract class ErrorHandlingController {
 
     /**
-     * Handles all unknown unexpected exceptions that can happen during WS call.
+     * Отлавливаем все ошибки возникающие в рамках запросов.
+     *
      * @param exception объект Exception
-     * @param response запрос в рамках которого произошло исключение
+     * @param response  запрос в рамках которого произошло исключение
      * @return ErrorDTO универсальный ответ для ситуаций с исключениями
      */
     @ExceptionHandler(Exception.class)

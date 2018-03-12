@@ -1,6 +1,12 @@
 {
   "name": "CrudBicApp",
   "version": "1.0.0",
+  "description": "Фронтальная часть проекта 'Справочник БИК'",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/avsharapov/CrudBic.git"
+  },
   "dependencies": {
     "axios": "^0.18.0",
     "react": "^16.2.0",
