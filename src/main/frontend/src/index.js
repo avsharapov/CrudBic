@@ -1,8 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App.jsx';
+import {store} from './reducers.jsx';
+import {Provider} from 'react-redux';
+import Table from './Table/index.jsx'
+
 
 
 ReactDOM.render(
-    <App/>
+    <Provider store={store}>
+        <Table/>
+    </Provider>
     , document.getElementById('app'));

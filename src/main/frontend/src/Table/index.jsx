@@ -1,81 +1,66 @@
 import React, {Component} from 'react';
-import filterFactory, {Comparator} from 'react-bootstrap-table2-filter';
+import filterFactory, {selectFilter, textFilter} from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import BootstrapTable from 'react-bootstrap-table-next';
+import {connect} from 'react-redux';
+import {handleTableChange, initData, setSelectedRow} from '../actions.jsx'
 import styles from '../style.css';
 import Header from './header.jsx';
 import Overlay from './overlay.jsx';
-import {ColumnsConfig} from './columns.jsx'
+import EditorModal from "./modal.jsx";
 
-
-export default class Table extends Component {
-    state = {
-        page: 1,
-        sizePerPage: 25,
-        data: [],
-        viewData: [],
-        totalSize: 0,
-        rowSelected: {rowIndex: null, itemId: null},
-    }
-
-    componentWillReceiveProps(nextProps) {
-        this.setState({
-            page: nextProps.page ? nextProps.page : this.state.page,
-            sizePerPage: nextProps.sizePerPage ? nextProps.sizePerPage : this.state.sizePerPage,
-            data: nextProps.data ? nextProps.data : this.state.data,
-            viewData: nextProps.data ? nextProps.data.slice(0, nextProps.sizePerPage ? nextProps.sizePerPage : this.state.sizePerPage) : this.state.viewData,
-            totalSize: nextProps.data ? nextProps.data.length : this.state.totalSize,
-        });
-    }
-
-    rowStyle = (row, rowIndex) => {
-        const style = {};
-        if (rowIndex === this.state.rowSelected.rowIndex) {
-            style.backgroundColor = '#4a464b';
-            style.color = '#ffffff';
-        } else {
-            style.backgroundColor = '#ffffff';
-            style.color = '#4a464b';
-        }
-
-        return style;
-    };
-
-    rowOnClick = (e, row, rowIndex) => {
-        this.setState(() => ({rowSelected: {rowIndex: rowIndex, itemId: row.id}}));
-    };
-
-    handleTableChange = (type, {page, sizePerPage, filters}) => {
-        const currentIndex = (page - 1) * sizePerPage;
-        setTimeout(() => {
-            const result = this.state.data.filter((row) => {
-                let valid = true;
-                for (const dataField in filters) {
-                    const {filterVal, filterType, comparator} = filters[dataField];
-                    if (filterType === 'TEXT') {
-                        if (comparator === Comparator.LIKE) {
-                            valid = row[dataField].toString().indexOf(filterVal) > -1;
-                        } else {
-                            valid = row[dataField] === filterVal;
-                        }
-                    }
-                    if (!valid) break;
-                }
-                return valid;
-            });
-            this.setState(() => ({
-                page,
-                viewData: result.slice(currentIndex, currentIndex + sizePerPage),
-                totalSize: result.length,
-                sizePerPage,
-                rowSelected: {rowIndex: null, itemId: null}
-            }));
-        }, 2);
-        this.setState(() => ({viewData: []}));
+class Table extends Component {
+    componentDidMount() {
+        this.props.initData();
     }
 
     render() {
-        const {viewData, page, sizePerPage, totalSize, rowSelected} = this.state;
+        const {additionalData, viewData, page, sizePerPage, totalSize, handleTableChange, setSelectedRow, rowStyle, columnConfigs} = this.props;
+
+        const headerOnFilterFormatter = (column, colIndex, {sortElement, filterElement}) => (
+            <div style={{display: 'flex', flexDirection: 'column-reverse'}}>
+                {filterElement}
+                {column.text}
+                {sortElement}
+            </div>
+        );
+
+        const ColumnConfigs = columnConfigs.map((column) => {
+            switch (column.dataField) {
+                case 'pzn': {
+                    column.headerFormatter = headerOnFilterFormatter;
+                    column.formatter = cell => additionalData['pzn'][cell];
+                    column.filter = selectFilter({options: additionalData['pzn']});
+                    break;
+                }
+                case 'uer': {
+                    column.headerFormatter = headerOnFilterFormatter;
+                    column.formatter = cell => additionalData['uer'][cell];
+                    column.filter = selectFilter({options: additionalData['uer']});
+                    break;
+                }
+                case 'tnp': {
+                    column.headerFormatter = headerOnFilterFormatter;
+                    column.formatter = cell => additionalData['tnp'][cell];
+                    column.filter = selectFilter({options: additionalData['tnp']});
+                    break;
+                }
+                case 'rgn': {
+                    column.headerFormatter = headerOnFilterFormatter;
+                    column.formatter = cell => additionalData['rgn'][cell];
+                    column.filter = selectFilter({options: additionalData['rgn']});
+                    break;
+                }
+                case 'newnum': {
+                    column.headerFormatter = headerOnFilterFormatter;
+                    column.filter = textFilter({placeholder: '...'});
+                    break;
+                }
+                default:
+                    column.headerFormatter = headerOnFilterFormatter;
+            }
+            return column;
+        });
         return (
             <div className={styles.wrapper}>
                 <BootstrapTable
@@ -83,16 +68,44 @@ export default class Table extends Component {
                     remote={{pagination: true}}
                     keyField="id"
                     data={viewData}
-                    columns={ColumnsConfig}
+                    columns={ColumnConfigs}
                     filter={filterFactory()}
-                    pagination={paginationFactory({ page, sizePerPage, totalSize })}
-                    onTableChange={this.handleTableChange}
-                    caption={<Header rowSelected={rowSelected} {...this.props}/>}
+                    pagination={paginationFactory({page, sizePerPage, totalSize})}
+                    onTableChange={handleTableChange}
+                    caption={<Header/>}
                     noDataIndication={() => <Overlay/>}
-                    rowEvents={{onClick: this.rowOnClick}}
-                    rowStyle={this.rowStyle}
+                    rowEvents={{onClick: setSelectedRow}}
+                    rowStyle={rowStyle}
                 />
+                <EditorModal/>
             </div>
         );
     }
 };
+
+const mapStateToProps = state => {
+    return state.tableReducer
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setSelectedRow: (e, row, rowIndex) => dispatch(setSelectedRow(rowIndex, row.id)),
+        handleTableChange: (type, {page, sizePerPage, filters}) => dispatch(handleTableChange(type, page, sizePerPage, filters)),
+        initData: () => dispatch(initData()),
+    }
+};
+
+const mergeProps = (stateProps, dispatchProps) => {
+    return {
+        ...stateProps,
+        ...dispatchProps,
+        rowStyle: (row, rowIndex) => {
+            return rowIndex === stateProps.rowSelected.rowIndex ?
+                {backgroundColor: '#4a464b', color: '#ffffff'} :
+                {backgroundColor: '#ffffff', color: '#4a464b'}
+        }
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(Table)
+

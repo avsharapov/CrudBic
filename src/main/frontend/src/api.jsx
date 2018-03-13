@@ -5,5 +5,6 @@ var instance = axios.create({
 });
 
 export const initData = () => instance.get('bnkseek/all');
+export const initAdditional = () => instance.get('bnkseek/additional');
 
 export const deleteItem = (id) => instance.delete('bnkseek/delete/' + id);
