@@ -76,4 +76,6 @@ public interface iService<T extends IEntity> {
      * Очистка всех данных в БД
      */
     void dropAllData();
+
+    Map<String, Object> getAdditional();
 }

@@ -10,6 +10,8 @@ import ru.letnes.model.BNKSEEKTable;
 import ru.letnes.rest.CrudRestController;
 import ru.letnes.service.iService;
 
+import java.util.Map;
+
 
 @Controller
 @RequestMapping("/bnkseek")
@@ -29,5 +31,10 @@ public class BnkseekRestController extends CrudRestController<BNKSEEKTable> {
         bnkseekService.resetSecondTable();
         bnkseekService.resetFirstTable();
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/additional", produces = "application/json", method = RequestMethod.GET)
+    public ResponseEntity<Map<String, Object>> getAdditional() {
+        return new ResponseEntity(bnkseekService.getAdditional(), HttpStatus.OK);
     }
 }

@@ -14,10 +14,7 @@ import ru.letnes.repositories.*;
 import java.io.File;
 import java.io.Serializable;
 import java.nio.charset.Charset;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 @Transactional(readOnly = true)
@@ -43,13 +40,13 @@ public class BnkseekService implements iService<BNKSEEKTable>, Serializable {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional()
     public void add(BNKSEEKTable entity) {
         bnkseekRepository.save(entity);
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional()
     public void add(Map<String, Object> newEntityValues) {
         try {
             BNKSEEKTable newEntity = BNKSEEKTable.builder().build();
@@ -61,7 +58,7 @@ public class BnkseekService implements iService<BNKSEEKTable>, Serializable {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional()
     public void update(Long id, Map<String, Object> updatedFields) {
         BNKSEEKTable old = bnkseekRepository.findOne(id);
         try {
@@ -73,13 +70,13 @@ public class BnkseekService implements iService<BNKSEEKTable>, Serializable {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional()
     public void update(BNKSEEKTable entity) {
         bnkseekRepository.save(entity);
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional()
     public void delete(Long id) {
         bnkseekRepository.delete(id);
     }
@@ -94,7 +91,17 @@ public class BnkseekService implements iService<BNKSEEKTable>, Serializable {
         return bnkseekRepository.count();
     }
 
-    @Transactional(readOnly = false)
+    @Override
+    public Map<String, Object> getAdditional() {
+        Map<String, Object> stringIEntityHashMap = new HashMap<>();
+        stringIEntityHashMap.put("pzn", Lists.newArrayList(pznRepository.findAll()));
+        stringIEntityHashMap.put("tnp", Lists.newArrayList(tnpRepository.findAll()));
+        stringIEntityHashMap.put("uer", Lists.newArrayList(uerRepository.findAll()));
+        stringIEntityHashMap.put("reg", Lists.newArrayList(regRepository.findAll()));
+        return stringIEntityHashMap;
+    }
+
+    @Transactional()
     public void resetFirstTable() {
         ClassLoader classLoader = getClass().getClassLoader();
         File bnkseek = new File(Objects.requireNonNull(classLoader.getResource("rawData/BNKSEEK.DBF")).getFile());
@@ -126,7 +133,7 @@ public class BnkseekService implements iService<BNKSEEKTable>, Serializable {
         bnkseekRepository.save(listBnkSeek);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional()
     public void resetSecondTable() {
         ClassLoader classLoader = getClass().getClassLoader();
         File pzn = new File(Objects.requireNonNull(classLoader.getResource("rawData/PZN.DBF")).getFile());
@@ -176,7 +183,7 @@ public class BnkseekService implements iService<BNKSEEKTable>, Serializable {
         regRepository.save(listRegTable);
     }
 
-    @Transactional(readOnly = false)
+    @Transactional()
     public void dropAllData() {
         pznRepository.deleteAll();
         tnpRepository.deleteAll();
