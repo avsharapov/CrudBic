@@ -1,5 +1,3 @@
-import {selectFilter, textFilter} from "react-bootstrap-table2-filter";
-
 export const initialState = {
     data: [],
     additionalData: {
@@ -14,17 +12,20 @@ export const initialState = {
     viewData: [],
     rowSelected: {rowIndex: null, itemId: null},
     modalIsVisible: false,
-    modalType: '',
+    modalTypeCreator: true,
     columnConfigs: [{
         dataField: 'id',
         text: 'ID',
         sort: true,
-        hidden: true
+        hidden: true,
+        type: 's',
+        value: ''
     }, {
         dataField: 'real',
         text: 'REAL',
         sort: true,
         type: 's',
+        value: '',
         title: () => 'Код контроля допустимости проведения расчётных операций',
         headerTitle: () => 'Код контроля допустимости проведения расчётных операций'
     }, {
@@ -32,6 +33,7 @@ export const initialState = {
         text: 'PZN',
         sort: true,
         type: 'o',
+        value: '',
         title: () => 'Код типа участника расчётов',
         headerTitle: () => 'Код типа участника расчётов'
     }, {
@@ -39,6 +41,8 @@ export const initialState = {
         text: 'UER',
         sort: true,
         type: 'o',
+        value: '',
+        required: true,
         title: () => 'Код типа участника (полльзователя) системы электронных расчётов',
         headerTitle: () => 'Код типа участника (полльзователя) системы электронных расчётов'
     }, {
@@ -46,6 +50,8 @@ export const initialState = {
         text: 'RGN',
         sort: true,
         type: 'o',
+        value: '',
+        required: true,
         title: () => 'Код территории Российской федерации',
         headerTitle: () => 'Код территории Российской федерации'
     }, {
@@ -53,6 +59,7 @@ export const initialState = {
         text: 'IND',
         sort: true,
         type: 's',
+        value: '',
         title: () => 'Индекс',
         headerTitle: () => 'Индекс'
     }, {
@@ -60,6 +67,7 @@ export const initialState = {
         text: 'TNP',
         sort: true,
         type: 'o',
+        value: '',
         title: () => 'Код типа населенного пункта',
         headerTitle: () => 'Код типа населенного пункта'
     }, {
@@ -67,6 +75,7 @@ export const initialState = {
         text: 'NNP',
         sort: true,
         type: 's',
+        value: '',
         title: () => 'Населённый пункт',
         headerTitle: () => 'Населённый пункт'
     }, {
@@ -74,6 +83,7 @@ export const initialState = {
         text: 'ADR',
         sort: true,
         type: 's',
+        value: '',
         title: () => 'Адрес',
         headerTitle: () => 'Адрес'
     }, {
@@ -81,6 +91,7 @@ export const initialState = {
         text: 'RKC',
         sort: true,
         type: 's',
+        value: '',
         title: () => 'БИК РКЦ(ГРКЦ)',
         headerTitle: () => 'БИК РКЦ(ГРКЦ)'
     }, {
@@ -88,6 +99,8 @@ export const initialState = {
         text: 'NAMEP',
         sort: true,
         type: 's',
+        value: '',
+        required: true,
         title: () => 'Наименование участника расчётов',
         headerTitle: () => 'Наименование участника расчётов'
     }, {
@@ -95,6 +108,9 @@ export const initialState = {
         text: 'NEWNUM',
         sort: true,
         type: 's',
+        value: '',
+        required: true,
+        notUnique: false,
         title: () => 'Банковский идентификационный код (БИК)',
         headerTitle: () => 'Банковский идентификационный код (БИК)'
     }, {
@@ -102,6 +118,7 @@ export const initialState = {
         text: 'TELEF',
         sort: true,
         type: 's',
+        value: '',
         title: () => 'Телефон',
         headerTitle: () => 'Телефон'
     }, {
@@ -109,6 +126,7 @@ export const initialState = {
         text: 'REGN',
         sort: true,
         type: 's',
+        value: '',
         title: () => 'Регистрационный номер',
         headerTitle: () => 'Регистрационный номер'
     }, {
@@ -116,6 +134,7 @@ export const initialState = {
         text: 'OKPO',
         sort: true,
         type: 's',
+        value: '',
         title: () => 'Код ОКПО',
         headerTitle: () => 'Код ОКПО'
     }, {
@@ -123,6 +142,8 @@ export const initialState = {
         text: 'DT_IZM',
         sort: true,
         type: 'd',
+        value: '',
+        required: true,
         title: () => 'Дата последнего изменения записи',
         headerTitle: () => 'Дата последнего изменения записи'
     }, {
@@ -130,6 +151,7 @@ export const initialState = {
         text: 'KSNP',
         sort: true,
         type: 's',
+        value: '',
         title: () => 'Номер счёта',
         headerTitle: () => 'Номер счёта'
     }, {
@@ -137,6 +159,8 @@ export const initialState = {
         text: 'DATE_IN',
         sort: true,
         type: 'd',
+        value: '',
+        required: true,
         title: () => 'Дата включения информации об участнике расчётов в ЭБД',
         headerTitle: () => 'Дата включения информации об участнике расчётов в ЭБД'
     }, {
@@ -144,6 +168,7 @@ export const initialState = {
         text: 'DATE_CH',
         sort: true,
         type: 'd',
+        value: '',
         title: () => 'Дата контроля',
         headerTitle: () => 'Дата контроля'
     }]

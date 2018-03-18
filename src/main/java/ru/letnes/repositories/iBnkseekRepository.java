@@ -11,4 +11,7 @@ public interface iBnkseekRepository extends CrudRepository<BNKSEEKTable, Long> {
     @Modifying
     @Query(value = "alter sequence bnkseek_sequence restart", nativeQuery = true)
     void restartSequence();
+
+    BNKSEEKTable findByNewnum(String newnum);
+
 }

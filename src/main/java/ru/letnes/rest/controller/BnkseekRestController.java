@@ -2,8 +2,10 @@ package ru.letnes.rest.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.letnes.model.BNKSEEKTable;
@@ -36,5 +38,10 @@ public class BnkseekRestController extends CrudRestController<BNKSEEKTable> {
     @RequestMapping(value = "/additional", produces = "application/json", method = RequestMethod.GET)
     public ResponseEntity<Map<String, Object>> getAdditional() {
         return new ResponseEntity(bnkseekService.getAdditional(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/findByNewnum/{newnum}", produces = {MediaType.APPLICATION_JSON_VALUE}, method = RequestMethod.GET)
+    public ResponseEntity<String> findByNewnum(@PathVariable(value = "newnum") String newnum) {
+        return new ResponseEntity<>(getService().findByNewnum(newnum), HttpStatus.OK);
     }
 }

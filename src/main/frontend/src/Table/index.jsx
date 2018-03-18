@@ -16,7 +16,6 @@ class Table extends Component {
 
     render() {
         const {additionalData, viewData, page, sizePerPage, totalSize, handleTableChange, setSelectedRow, rowStyle, columnConfigs} = this.props;
-
         const headerOnFilterFormatter = (column, colIndex, {sortElement, filterElement}) => (
             <div style={{display: 'flex', flexDirection: 'column-reverse'}}>
                 {filterElement}
@@ -64,8 +63,7 @@ class Table extends Component {
         return (
             <div className={styles.wrapper}>
                 <BootstrapTable
-                    insertRow={true}
-                    remote={{pagination: true}}
+                    remote
                     keyField="id"
                     data={viewData}
                     columns={ColumnConfigs}
@@ -89,7 +87,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        setSelectedRow: (e, row, rowIndex) => dispatch(setSelectedRow(rowIndex, row.id)),
+        setSelectedRow: (e, row, rowIndex) => {
+            dispatch(setSelectedRow(rowIndex, row.id))
+        },
         handleTableChange: (type, {page, sizePerPage, filters}) => dispatch(handleTableChange(type, page, sizePerPage, filters)),
         initData: () => dispatch(initData()),
     }

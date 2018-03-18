@@ -16,15 +16,18 @@
     "react-bootstrap-table2-editor": "~0.1.2",
     "react-bootstrap-table2-filter": "~0.1.3",
     "react-bootstrap-table2-paginator": "~0.1.1",
+    "react-date-picker": "~6.9.0",
     "react-dom": "^16.2.0",
     "react-redux": "~5.0.7",
-    "react-responsive-modal": "~2.0.1",
+    "react-redux-toastr": "~7.2.3",
+    "react-select": "~1.2.1",
     "redux": "~3.7.2",
+    "redux-logger": "~3.0.6",
     "redux-thunk": "~2.2.0",
     "webpack": "^4.1.0"
   },
   "scripts": {
-    "build": "webpack --mode development --output=../webapp/bundle.js"
+    "build": "webpack --mode production --output=../webapp/bundle.js"
   },
   "devDependencies": {
     "babel-core": "~6.26.0",
@@ -36,6 +39,7 @@
     "babel-preset-stage-0": "~6.24.1",
     "css-loader": "~0.28.10",
     "file-loader": "~1.1.11",
+    "redux-devtools-extension": "~2.13.2",
     "style-loader": "~0.20.2",
     "url-loader": "~1.0.1",
     "webpack-cli": "~2.0.10",

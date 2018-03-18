@@ -2,15 +2,18 @@ package ru.letnes.service;
 
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.ConvertUtils;
 import org.jamel.dbf.processor.DbfProcessor;
 import org.jamel.dbf.processor.DbfRowMapper;
 import org.jamel.dbf.utils.DbfUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import ru.letnes.model.*;
+import ru.letnes.model.converters.*;
 import ru.letnes.repositories.*;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.Serializable;
 import java.nio.charset.Charset;
@@ -33,10 +36,26 @@ public class BnkseekService implements iService<BNKSEEKTable>, Serializable {
     @Autowired
     iPznRepository pznRepository;
 
+    @PostConstruct
+    public void registerConverters() {
+        ConvertUtils.register(new PZNConverter(pznRepository), PZNTable.class);
+        ConvertUtils.register(new UERConverter(uerRepository), UERTable.class);
+        ConvertUtils.register(new TNPConverter(tnpRepository), TNPTable.class);
+        ConvertUtils.register(new REGConverter(regRepository), REGTable.class);
+        ConvertUtils.register(new StringToDateConverter(), Date.class);
+    }
+
     @Override
     public List<BNKSEEKTable> list() {
-
-        return Lists.newArrayList(bnkseekRepository.findAll());
+        Comparator<BNKSEEKTable> comparator = new Comparator<BNKSEEKTable>() {
+            @Override
+            public int compare(BNKSEEKTable left, BNKSEEKTable right) {
+                return (int) (left.getId() - right.getId());
+            }
+        };
+        List<BNKSEEKTable> bnkseekTables = Lists.newArrayList(bnkseekRepository.findAll());
+        Collections.sort(bnkseekTables, comparator);
+        return bnkseekTables;
     }
 
     @Override
@@ -71,12 +90,6 @@ public class BnkseekService implements iService<BNKSEEKTable>, Serializable {
 
     @Override
     @Transactional()
-    public void update(BNKSEEKTable entity) {
-        bnkseekRepository.save(entity);
-    }
-
-    @Override
-    @Transactional()
     public void delete(Long id) {
         bnkseekRepository.delete(id);
     }
@@ -84,6 +97,16 @@ public class BnkseekService implements iService<BNKSEEKTable>, Serializable {
     @Override
     public BNKSEEKTable findById(Long id) {
         return bnkseekRepository.findOne(id);
+    }
+
+    @Override
+    public String findByNewnum(String newnum) {
+        BNKSEEKTable byNewnum = bnkseekRepository.findByNewnum(newnum);
+        String id = "";
+        if (byNewnum != null) {
+            return byNewnum.getId().toString();
+        }
+        return id;
     }
 
     @Override
@@ -204,4 +227,6 @@ public class BnkseekService implements iService<BNKSEEKTable>, Serializable {
     private String obtainString(Object bytes) {
         return new String(DbfUtils.trimLeftSpaces((byte[]) bytes), Charset.forName("cp866"));
     }
+
+
 }

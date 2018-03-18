@@ -1,15 +1,14 @@
-import {combineReducers} from 'redux';
+import {applyMiddleware, combineReducers, createStore, compose} from 'redux';
 import thunkMiddleware from 'redux-thunk'
-import {createStore, applyMiddleware } from 'redux';
-import { initialState } from './initialState.jsx'
-
+import {initialState} from './initialState.jsx'
+import {reducer as toastrReducer} from 'react-redux-toastr'
 
 const tableReducer = (state = initialState, action) => {
     switch (action.type) {
         case 'SET_SELECTED_ROW':
             return {
                 ...state,
-                rowSelected: action.rowSelected
+                rowSelected: action.rowSelected,
             };
         case 'HANDLE_TABLE_CHANGE':
             return {
@@ -39,19 +38,46 @@ const tableReducer = (state = initialState, action) => {
             return {
                 ...state,
                 modalIsVisible: !state.modalIsVisible,
-                modalType: action.modalType
+                modalTypeCreator: action.modalTypeCreator,
+                columnConfigs: action.row,
+                rowSelected: action.rowSelected,
             };
+        case 'NEWNUM_ALREADY_EXIST':
+        case 'NEWNUM_NOT_CHANGED':
+        case 'NEWNUM_NOT_EXIST':
+        case 'NEWNUM_IS_EMPTY':
+        case 'CHANGE_ROW_FIELD':
+            return {
+                ...state,
+                columnConfigs: action.column
+            };
+        case 'FIND_NEWNUM_SUCCESS':
+        case 'UPDATE_FIELD_SUCCESS':
+        case 'CREATE_NEW_FIELD_SUCCESS':
         case 'DELETE_ITEM_SUCCESS':
-        case 'DELETE_ITEM_FAILURE':
-        case 'INIT_DATA_FAILURE':
-        case 'INIT_ADDITIONAL_DATA_FAILURE':
         default:
             return state
     }
 };
 
 export const reducers = combineReducers({
-    tableReducer
+    tableReducer, toastr: toastrReducer
 });
 
-export const store = createStore(reducers, applyMiddleware(thunkMiddleware));
+
+const middlewares = [];
+middlewares.push(thunkMiddleware);
+
+if (process.env.NODE_ENV === `development`) {
+    const {logger} = require(`redux-logger`);
+    middlewares.push(logger);
+}
+
+const composeEnhancers =
+    process.env.NODE_ENV !== 'production' &&
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
+        window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+            name: 'CrudBic',
+        }) : compose;
+
+export const store = createStore(reducers, composeEnhancers(applyMiddleware(...middlewares)));

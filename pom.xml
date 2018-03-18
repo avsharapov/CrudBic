@@ -14,6 +14,7 @@
         <hibernate.version>5.2.10.Final</hibernate.version>
         <querydsl.version>4.1.4</querydsl.version>
         <jackson.version>2.9.0</jackson.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
@@ -131,6 +132,11 @@
             <version>24.0-jre</version>
         </dependency>
 
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.3</version>
+        </dependency>
     </dependencies>
     <build>
         <finalName>CrudBic</finalName>
@@ -194,7 +200,7 @@
                         </goals>
                         <phase>generate-resources</phase>
                         <configuration>
-                            <arguments>install</arguments>
+                            <arguments>install --no-optional</arguments>
                         </configuration>
                     </execution>
                     <execution>
@@ -214,28 +220,6 @@
                     <workingDirectory>src/main/frontend/</workingDirectory>
                     <installDirectory>src/main/frontend/node_maven/</installDirectory>
                 </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.0.2</version>
-                <executions>
-                    <execution>
-                        <id>copy dist files to static</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>src/main/resources/static</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>src/main/frontend/dist/</directory>
-                                    <filtering>false</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
 
             <plugin>

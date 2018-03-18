@@ -41,13 +41,6 @@ public interface iService<T extends IEntity> {
     void update(Long id, Map<String, Object> updatedFields);
 
     /**
-     * Обновить запись в БД.
-     *
-     * @param entity
-     */
-    void update(T entity);
-
-    /**
      * Удалить запись из БД по ID.
      *
      * @param id
@@ -61,6 +54,14 @@ public interface iService<T extends IEntity> {
      * @return T
      */
     T findById(Long id);
+
+    /**
+     * Получить ID записи по NEWNUM.
+     *
+     * @param newnum
+     * @return Long
+     */
+    String findByNewnum(String newnum);
 
     /**
      * @return перезалить вторичных таблиц в БД данными.
@@ -77,5 +78,8 @@ public interface iService<T extends IEntity> {
      */
     void dropAllData();
 
+    /**
+     * Получение мапы с вспомогательными таблицами
+     */
     Map<String, Object> getAdditional();
 }
