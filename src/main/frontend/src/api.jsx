@@ -2,7 +2,7 @@ import axios from "axios/index";
 
 
 var instance = axios.create({
-    baseURL: 'http://' + window.location.href.split('/')[2].split(':')[0] + ':' + window.location.href.split('/')[2].split(':')[1] + '/rest/'
+    baseURL: window.location.href.split(':')[0] + '://' + window.location.href.split('/')[2] + '/rest/'
 });
 
 export const initData = () => instance.get('bnkseek/all');
