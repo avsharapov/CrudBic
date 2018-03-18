@@ -2,6 +2,7 @@
 
 [![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=ru.letnes%3ACrudBic&metric=alert_status)](https://sonarcloud.io/dashboard?id=ru.letnes%3ACrudBic)
 
+[Развёрнутое приложение на Heroku](https://stark-harbor-29920.herokuapp.com)
 
 БД: Приложение требует наличия поднятой PostgreSQL с параметрами
 `jdbc:postgresql://localhost:5432/bic`
